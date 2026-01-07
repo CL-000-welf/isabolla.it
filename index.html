@@ -2,160 +2,99 @@
 <html lang="it">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ISABOLLA — Work in progress</title>
-  <meta name="description" content="ISABOLLA — arte, idee, odori, stranezze e bellezza naturale." />
-  <style>
-    :root{
-      --bg:#070A12;
-      --fg:#EAF2FF;
-      --muted:#9FB3C8;
-      --accent:#7CF6FF;
-      --accent2:#FF4FD8;
-      --card:rgba(255,255,255,.06);
-      --border:rgba(255,255,255,.12);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background:
-        radial-gradient(1200px 600px at 25% 10%, rgba(124,246,255,.25), transparent 55%),
-        radial-gradient(900px 500px at 80% 30%, rgba(255,79,216,.22), transparent 60%),
-        radial-gradient(900px 600px at 50% 90%, rgba(150,120,255,.16), transparent 60%),
-        var(--bg);
-      color:var(--fg);
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:40px 16px;
-    }
-    .wrap{max-width:980px;width:100%}
-    header{
-      display:flex;
-      align-items:center;
-      gap:18px;
-      margin-bottom:22px;
-    }
-    .bubble{
-      width:64px;height:64px;border-radius:50%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(124,246,255,.35) 28%, rgba(255,79,216,.25) 55%, rgba(70,30,130,.2) 78%);
-      box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 18px 70px rgba(124,246,255,.18);
-      position:relative;
-      overflow:hidden;
-    }
-    .bubble:after{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background: conic-gradient(from 120deg, rgba(124,246,255,.0), rgba(124,246,255,.22), rgba(255,79,216,.18), rgba(124,246,255,.0));
-      filter: blur(12px);
-      animation: spin 8s linear infinite;
-    }
-    @keyframes spin{to{transform:rotate(360deg)}}
-    h1{
-      margin:0;
-      letter-spacing:.12em;
-      font-size: clamp(26px, 4vw, 44px);
-      font-weight: 800;
-    }
-    h1 span{
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
-    .tag{
-      color:var(--muted);
-      margin-top:6px;
-      font-size: 14px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    .card{
-      margin-top:18px;
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:22px;
-      backdrop-filter: blur(10px);
-    }
-    .big{
-      font-size: clamp(18px, 2.3vw, 24px);
-      line-height:1.4;
-      margin:0 0 16px;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(2,minmax(0,1fr));
-      gap:12px;
-    }
-    .pill{
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.25);
-      color: var(--fg);
-      font-size: 14px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      transition: transform .15s ease, border-color .15s ease;
-    }
-    .pill:hover{
-      transform: translateY(-1px);
-      border-color: rgba(124,246,255,.35);
-    }
-    .pill small{color:var(--muted);font-size:12px}
-    footer{
-      margin-top:18px;
-      color:var(--muted);
-      font-size:13px;
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    a{color:var(--accent);text-decoration:none}
-    a:hover{text-decoration:underline}
-    @media (max-width:740px){
-      .grid{grid-template-columns:1fr}
-    }
-  </style>
+
+  <meta name="description" content="ISABOLLA — arte, idee, odori nuovi, stranezza positiva. Portfolio e progetti di Isabella." />
+  <meta name="theme-color" content="#070A12" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="assets/isabolla-logo.png" />
 </head>
+
 <body>
-  <div class="wrap">
-    <header>
-      <div class="bubble" aria-hidden="true"></div>
-      <div>
-        <h1><span>ISABOLLA</span></h1>
-        <div class="tag">studio • arte • odori nuovi • antropologia • stranezza positiva</div>
+  <!-- subtle background watermark -->
+  <div class="bg-logo" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <header class="hero">
+      <img class="logo" src="assets/isabolla-logo.png" alt="ISABOLLA logo" />
+
+      <h1 class="title">ISABOLLA</h1>
+      <p class="tagline">studio • arte • odori nuovi • antropologia • stranezza positiva</p>
+
+      <p class="intro">
+        Benvenuti su <strong>isabolla.it</strong>.  
+        Work in progress: qui atterreranno quadri, idee, essenze, oggetti e piccole demenze luminose.
+      </p>
+
+      <div class="cta-row">
+        <a class="cta primary" href="#sezioni">Esplora le sezioni</a>
+        <a class="cta ghost" href="mailto:ciao@isabolla.it">Contattami</a>
       </div>
     </header>
 
-    <section class="card">
-      <p class="big">
-        Benvenuti su <strong>isabolla.it</strong> — Work in progress.
-        Qui atterreranno quadri, idee, essenze, oggetti e piccole demenze luminose.
-      </p>
+    <section id="sezioni" class="card">
+      <div class="card-head">
+        <h2>Universi</h2>
+        <p>Le sezioni che diventeranno il tuo portfolio (una pagina per ognuna).</p>
+      </div>
 
       <div class="grid">
-        <div class="pill"><span>Arte visiva</span> <small>in arrivo</small></div>
-        <div class="pill"><span>DonneBellissime</span> <small>merch</small></div>
-        <div class="pill"><span>Nasam</span> <small>essenze</small></div>
-        <div class="pill"><span>Cocorita Porkins</span> <small>lingerie</small></div>
-        <div class="pill"><span>Vivara</span> <small>arredo</small></div>
-        <div class="pill"><span>11:26</span> <small>un segnale</small></div>
+        <a class="pill" href="sections/arte-visiva.html">
+          <span class="pill-title">Arte visiva</span>
+          <span class="pill-meta">quadri • serie • progetti</span>
+        </a>
+
+        <a class="pill" href="sections/donnebellissime.html">
+          <span class="pill-title">DonneBellissime</span>
+          <span class="pill-meta">merch • stampe • capsule</span>
+        </a>
+
+        <a class="pill" href="sections/nasam.html">
+          <span class="pill-title">Nasam</span>
+          <span class="pill-meta">essenze • profumi • odori nuovi</span>
+        </a>
+
+        <a class="pill" href="sections/mutande-mariano.html">
+          <span class="pill-title">Mutande Mariano</span>
+          <span class="pill-meta">oggetti • ironia • rituali</span>
+        </a>
+
+        <a class="pill" href="sections/cocorita-porkins.html">
+          <span class="pill-title">Cocorita Porkins</span>
+          <span class="pill-meta">lingerie • handmade • lasciva</span>
+        </a>
+
+        <a class="pill" href="sections/vivara.html">
+          <span class="pill-title">Vivara</span>
+          <span class="pill-meta">arredo • ottone • pergamena</span>
+        </a>
+
+        <a class="pill special" href="sections/1126.html">
+          <span class="pill-title">11:26</span>
+          <span class="pill-meta">un segnale • una porta</span>
+        </a>
+      </div>
+
+      <div class="note">
+        <strong>Nota:</strong> queste pagine non esistono ancora.  
+        Quando vorrai, ti preparo i file “vuoti” con layout già pronto (gallery, testo, contatti, shop link).
       </div>
     </section>
 
-    <footer>
-      <span>© <span id="y"></span> Isabella • ISABOLLA</span>
-      <span><a href="mailto:ciao@isabolla.it">ciao@isabolla.it</a> • Instagram: @isabolla</span>
+    <footer class="footer">
+      <div>© <span id="y"></span> ISABOLLA — Isabella</div>
+      <div class="footer-links">
+        <a href="mailto:ciao@isabolla.it">ciao@isabolla.it</a>
+        <span>•</span>
+        <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
+      </div>
     </footer>
-  </div>
+  </main>
 
-  <script>document.getElementById("y").textContent=new Date().getFullYear();</script>
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
