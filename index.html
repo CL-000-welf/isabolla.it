@@ -20,7 +20,16 @@
     <header class="hero">
       <img class="logo" src="assets/isabolla-logo.png" alt="ISABOLLA logo" />
 
-      <h1 class="title">ISABOLLA</h1>
+     <h1 class="title" id="playable-title">
+  <span data-note="C4">I</span>
+  <span data-note="D4">S</span>
+  <span data-note="E4">A</span>
+  <span data-note="F4">B</span>
+  <span data-note="G4">O</span>
+  <span data-note="A4">L</span>
+  <span data-note="B4">L</span>
+  <span data-note="fart">A</span>
+</h1>
       <p class="tagline">studio • arte • odori nuovi • antropologia • stranezza positiva</p>
 
       <p class="intro">
@@ -90,6 +99,57 @@
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
+    const title = document.getElementById('playable-title');
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+title.querySelectorAll('span').forEach(span => {
+  span.style.cursor = 'pointer'; // Fa capire che è cliccabile
+  
+  span.onclick = function() {
+    const note = this.getAttribute('data-note');
+    
+    if (note === 'fart') {
+      playFart();
+    } else {
+      playNote(getFrequency(note));
+    }
+    
+    // Piccolo effetto visivo al click
+    this.style.textShadow = "0 0 20px var(--cyan)";
+    setTimeout(() => this.style.textShadow = "none", 200);
+  };
+});
+
+function getFrequency(note) {
+  const notes = { 'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88 };
+  return notes[note];
+}
+
+function playNote(freq) {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sine'; // Suono pulito tipo "nota"
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 1);
+}
+
+function playFart() {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sawtooth'; // Suono più "ruvido" per la pernacchia
+  osc.frequency.setValueAtTime(60, audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.5);
+  gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+  gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.5);
+}
   </script>
 </body>
 </html>
