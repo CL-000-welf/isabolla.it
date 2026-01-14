@@ -99,74 +99,72 @@
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
+    
     const title = document.getElementById('playable-title');
-let audioCtx;
+    let audioCtx;
 
-// Inizializza l'audio al primo click/tocco (obbligatorio per mobile)
-function initAudio() {
-    if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-    }
-}
-
-// Sblocca audio
-window.addEventListener('touchstart', initAudio, { once: true });
-window.addEventListener('mousedown', initAudio, { once: true });
-
-title.querySelectorAll('span').forEach(span => {
-    const play = () => {
-        initAudio(); // Assicura che l'audio sia attivo
-        const note = span.getAttribute('data-note');
-        if (note === 'fart') {
-            playFart();
-            span.classList.add('shake-it');
-            setTimeout(() => span.classList.remove('shake-it'), 500);
-        } else {
-            playNote(getFrequency(note));
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
-    };
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
 
-    // Desktop: Suona al passaggio del mouse
-    span.addEventListener('mouseenter', play);
-    // Mobile: Suona al tocco
-    span.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Evita zoom o click ritardati
-        play();
+    // Sblocca audio per mobile
+    window.addEventListener('touchstart', initAudio, { once: true });
+    window.addEventListener('mousedown', initAudio, { once: true });
+
+    title.querySelectorAll('span').forEach(span => {
+        const playAction = () => {
+            initAudio();
+            const note = span.getAttribute('data-note');
+            if (note === 'fart') {
+                playFart();
+                span.classList.add('shake-it');
+                setTimeout(() => span.classList.remove('shake-it'), 500);
+            } else {
+                playNote(getFrequency(note));
+            }
+        };
+
+        span.addEventListener('mouseenter', playAction);
+        span.addEventListener('touchstart', (e) => {
+            e.preventDefault(); 
+            playAction();
+        });
     });
-});
 
-function getFrequency(note) {
-    const notes = { 'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88 };
-    return notes[note];
-}
+    function getFrequency(note) {
+        const notes = { 'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88 };
+        return notes[note];
+    }
 
-function playNote(freq) {
-    if(!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.8);
-}
+    function playNote(freq) {
+        if(!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.8);
+    }
 
-function playFart() {
-    if(!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(70, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.4);
-    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-    gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.4);
-}
+    function playFart() {
+        if(!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(70, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.4);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+    }
   </script>
 </body>
 </html>
