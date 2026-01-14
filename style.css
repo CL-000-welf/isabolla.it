@@ -252,3 +252,18 @@ a:hover{opacity:.95}
   .wrap{padding-top: 38px}
   .logo{width: 290px}
 }
+/*ISABOLLA SUONA*/
+.title span {
+  display: inline-block;
+  transition: transform 0.1s ease, color 0.1s ease;
+}
+
+.title span:hover {
+  transform: translateY(-5px);
+  color: var(--cyan);
+}
+
+/* L'ultima lettera A, quella della pernacchia */
+.title span:last-child:hover {
+  color: var(--magenta);
+}
