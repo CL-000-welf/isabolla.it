@@ -100,57 +100,79 @@
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
     const title = document.getElementById('playable-title');
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let audioCtx;
+
+// Funzione per inizializzare l'audio (necessaria per Mobile)
+function initAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}
+
+// Sblocca l'audio al primo tocco ovunque sulla pagina (per Mobile)
+window.addEventListener('touchstart', initAudio, { once: true });
+window.addEventListener('mousedown', initAudio, { once: true });
 
 title.querySelectorAll('span').forEach(span => {
-  span.style.cursor = 'pointer'; // Fa capire che è cliccabile
-  
-  span.onclick = function() {
-  const note = this.getAttribute('data-note');
-  
-  if (note === 'fart') {
-    playFart();
-    // Aggiunge la vibrazione
-    this.classList.add('shake-it');
-    setTimeout(() => this.classList.remove('shake-it'), 500);
-  } else {
-    playNote(getFrequency(note));
-    // L'ingrandimento è già gestito dal CSS :active, 
-    // ma possiamo aggiungere un bagliore extra qui
-    this.style.textShadow = "0 0 25px var(--cyan)";
-    setTimeout(() => this.style.textShadow = "none", 300);
-  }
-};
+    // Funzione che esegue il suono
+    const triggerAction = function() {
+        initAudio(); // Assicura che l'audio sia attivo
+        const note = span.getAttribute('data-note');
+        
+        if (note === 'fart') {
+            playFart();
+            span.classList.add('shake-it');
+            setTimeout(() => span.classList.remove('shake-it'), 500);
+        } else {
+            playNote(getFrequency(note));
+        }
+    };
+
+    // Suona al passaggio del mouse (Desktop)
+    span.addEventListener('mouseenter', triggerAction);
+    
+    // Suona al tocco (Mobile)
+    span.addEventListener('touchstart', function(e) {
+        e.preventDefault(); // Impedisce lo zoom al doppio tocco
+        triggerAction();
+    });
+});
 
 function getFrequency(note) {
-  const notes = { 'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88 };
-  return notes[note];
+    const notes = { 'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88 };
+    return notes[note];
 }
 
 function playNote(freq) {
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = 'sine'; // Suono pulito tipo "nota"
-  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1);
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start();
-  osc.stop(audioCtx.currentTime + 1);
+    if(!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.8);
 }
 
 function playFart() {
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = 'sawtooth'; // Suono più "ruvido" per la pernacchia
-  osc.frequency.setValueAtTime(60, audioCtx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.5);
-  gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-  gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.5);
+    if(!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(70, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.4);
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.4);
 }
   </script>
 </body>
