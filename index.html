@@ -102,7 +102,7 @@
     const title = document.getElementById('playable-title');
 let audioCtx;
 
-// Funzione per inizializzare l'audio (necessaria per Mobile)
+// Inizializza l'audio al primo click/tocco (obbligatorio per mobile)
 function initAudio() {
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -112,16 +112,14 @@ function initAudio() {
     }
 }
 
-// Sblocca l'audio al primo tocco ovunque sulla pagina (per Mobile)
+// Sblocca audio
 window.addEventListener('touchstart', initAudio, { once: true });
 window.addEventListener('mousedown', initAudio, { once: true });
 
 title.querySelectorAll('span').forEach(span => {
-    // Funzione che esegue il suono
-    const triggerAction = function() {
+    const play = () => {
         initAudio(); // Assicura che l'audio sia attivo
         const note = span.getAttribute('data-note');
-        
         if (note === 'fart') {
             playFart();
             span.classList.add('shake-it');
@@ -131,13 +129,12 @@ title.querySelectorAll('span').forEach(span => {
         }
     };
 
-    // Suona al passaggio del mouse (Desktop)
-    span.addEventListener('mouseenter', triggerAction);
-    
-    // Suona al tocco (Mobile)
-    span.addEventListener('touchstart', function(e) {
-        e.preventDefault(); // Impedisce lo zoom al doppio tocco
-        triggerAction();
+    // Desktop: Suona al passaggio del mouse
+    span.addEventListener('mouseenter', play);
+    // Mobile: Suona al tocco
+    span.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Evita zoom o click ritardati
+        play();
     });
 });
 
@@ -154,10 +151,8 @@ function playNote(freq) {
     osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
     gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.8);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.8);
 }
 
 function playFart() {
@@ -169,10 +164,8 @@ function playFart() {
     osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.4);
     gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
     gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.4);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.4);
 }
   </script>
 </body>
