@@ -63,16 +63,52 @@ a:hover{opacity:.95}
   filter: drop-shadow(0 18px 42px rgba(0,0,0,.55));
 }
 
-.title{
-  margin: 10px 0 4px;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  font-size: clamp(28px, 5vw, 50px);
-  font-weight: 900;
-  background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--violet));
-  -webkit-background-clip:text;
-  background-clip:text;
-  color: transparent;
+.title {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    margin: 20px 0;
+    font-size: clamp(40px, 8vw, 80px); /* Caratteri più alti e grandi */
+    font-weight: 900;
+    cursor: default;
+}
+
+.title span {
+    display: inline-block;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    user-select: none;
+    /* Reset dello sfondo per le singole lettere */
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* Sfumature singole lettere come immagine */
+.title span:nth-child(1) { background-image: linear-gradient(#FF8C00, #FF4500); } /* I */
+.title span:nth-child(2) { background-image: linear-gradient(#FF4500, #FF1493); } /* S */
+.title span:nth-child(3) { background-image: linear-gradient(#FF1493, #C71585); } /* A */
+.title span:nth-child(4) { background-image: linear-gradient(#C71585, #8A2BE2); } /* B */
+.title span:nth-child(5) { background-image: linear-gradient(#8A2BE2, #4169E1); } /* O */
+.title span:nth-child(6) { background-image: linear-gradient(#4169E1, #00BFFF); } /* L */
+.title span:nth-child(7) { background-image: linear-gradient(#00BFFF, #00CED1); } /* L */
+.title span:nth-child(8) { background-image: linear-gradient(#00CED1, #20B2AA); } /* A */
+
+/* Animazione al passaggio (Hover) */
+.title span:hover {
+    transform: scale(1.3) translateY(-10px);
+    filter: brightness(1.2);
+}
+
+.shake-it {
+    animation: shake 0.5s infinite;
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    25% { transform: translate(-2px, -1px) rotate(-2deg); }
+    50% { transform: translate(-1px, 2px) rotate(0deg); }
+    75% { transform: translate(2px, 1px) rotate(2deg); }
+    100% { transform: translate(1px, -1px) rotate(0deg); }
 }
 
 .tagline{
