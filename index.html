@@ -98,6 +98,7 @@
   </main>
 
   <script>
+    <script>
     document.getElementById("y").textContent = new Date().getFullYear();
     
     const title = document.getElementById('playable-title');
@@ -165,6 +166,7 @@
         osc.connect(gain); gain.connect(audioCtx.destination);
         osc.start(); osc.stop(audioCtx.currentTime + 0.4);
     }
+</script>
   </script>
 </body>
 </html>
