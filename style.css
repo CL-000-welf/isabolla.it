@@ -1,51 +1,67 @@
-:root{
-  --bg:#070A12; --fg:#EAF2FF; --muted:#9FB3C8;
-  --cyan:#7CF6FF; --magenta:#FF4FD8; --violet:#9B7CFF;
-  --card: rgba(255,255,255,.06); --border: rgba(255,255,255,.12); --shadow: 0 24px 80px rgba(0,0,0,.55);
-}
-*{box-sizing:border-box}
-html,body{height:100%; margin:0; font-family: ui-sans-serif, system-ui, sans-serif; background: var(--bg); color:var(--fg); overflow-x:hidden;}
-body{ background: radial-gradient(1100px 700px at 20% 10%, rgba(124,246,255,.18), transparent 55%), radial-gradient(1000px 520px at 85% 28%, rgba(255,79,216,.14), transparent 60%), radial-gradient(900px 650px at 50% 92%, rgba(155,124,255,.12), transparent 60%), var(--bg); }
-.wrap{ max-width: 980px; margin: 0 auto; padding: 48px 18px; }
-.hero{ text-align:center; padding: 26px; }
-.logo{ width: 330px; max-width: 92vw; margin: 0 auto 8px; display:block; filter: drop-shadow(0 18px 42px rgba(0,0,0,.55)); }
+document.getElementById("y").textContent = new Date().getFullYear();
+    
+    const title = document.getElementById('playable-title');
+    let audioCtx;
 
-/* TITOLO ISABOLLA SFUMATO */
-.title {
-    display: flex; justify-content: center; gap: 4px; margin: 10px 0;
-    font-size: clamp(50px, 10vw, 100px); /* Molto alto */
-    font-weight: 900; letter-spacing: -2px;
-}
-.title span {
-    display: inline-block; cursor: pointer; user-select: none;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    background-clip: text; -webkit-background-clip: text; color: transparent;
-}
-/* Colori sfumati dall'arancio al verde acqua */
-.title span:nth-child(1) { background-image: linear-gradient(#FF8C00, #FF4500); }
-.title span:nth-child(2) { background-image: linear-gradient(#FF4500, #FF1493); }
-.title span:nth-child(3) { background-image: linear-gradient(#FF1493, #C71585); }
-.title span:nth-child(4) { background-image: linear-gradient(#C71585, #8A2BE2); }
-.title span:nth-child(5) { background-image: linear-gradient(#8A2BE2, #4169E1); }
-.title span:nth-child(6) { background-image: linear-gradient(#4169E1, #00BFFF); }
-.title span:nth-child(7) { background-image: linear-gradient(#00BFFF, #00CED1); }
-.title span:nth-child(8) { background-image: linear-gradient(#00CED1, #20B2AA); }
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
 
-.title span:hover, .title span:active { transform: scale(1.3) translateY(-10px); filter: brightness(1.3); }
+    // Sblocca audio per mobile
+    window.addEventListener('touchstart', initAudio, { once: true });
+    window.addEventListener('mousedown', initAudio, { once: true });
 
-/* Animazione Pernacchia */
-.shake-it { animation: shake 0.5s infinite; }
-@keyframes shake {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  25% { transform: translate(-2px, -1px) rotate(-2deg); }
-  50% { transform: translate(-1px, 2px) rotate(0deg); }
-  75% { transform: translate(2px, 1px) rotate(2deg); }
-  100% { transform: translate(1px, -1px) rotate(0deg); }
-}
+    title.querySelectorAll('span').forEach(span => {
+        const playAction = () => {
+            initAudio();
+            const note = span.getAttribute('data-note');
+            if (note === 'fart') {
+                playFart();
+                span.classList.add('shake-it');
+                setTimeout(() => span.classList.remove('shake-it'), 500);
+            } else {
+                playNote(getFrequency(note));
+            }
+        };
 
-/* Altri stili base */
-.tagline{ color: var(--muted); text-transform: uppercase; font-size: 12px; letter-spacing: .1em; margin-bottom: 20px;}
-.grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.pill{ background: rgba(0,0,0,.2); border: 1px solid var(--border); padding: 15px; border-radius: 15px; text-decoration: none; color: white; transition: 0.2s;}
-.pill:hover{ background: rgba(255,255,255,0.05); transform: translateY(-2px); }
-@media (max-width: 600px){ .grid{ grid-template-columns: 1fr; } }
+        span.addEventListener('mouseenter', playAction);
+        span.addEventListener('touchstart', (e) => {
+            e.preventDefault(); 
+            playAction();
+        });
+    });
+
+    function getFrequency(note) {
+        const notes = { 'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88 };
+        return notes[note];
+    }
+
+    function playNote(freq) {
+        if(!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.8);
+    }
+
+    function playFart() {
+        if(!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(70, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.4);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+    }
