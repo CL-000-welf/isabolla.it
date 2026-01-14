@@ -106,19 +106,21 @@ title.querySelectorAll('span').forEach(span => {
   span.style.cursor = 'pointer'; // Fa capire che è cliccabile
   
   span.onclick = function() {
-    const note = this.getAttribute('data-note');
-    
-    if (note === 'fart') {
-      playFart();
-    } else {
-      playNote(getFrequency(note));
-    }
-    
-    // Piccolo effetto visivo al click
-    this.style.textShadow = "0 0 20px var(--cyan)";
-    setTimeout(() => this.style.textShadow = "none", 200);
-  };
-});
+  const note = this.getAttribute('data-note');
+  
+  if (note === 'fart') {
+    playFart();
+    // Aggiunge la vibrazione
+    this.classList.add('shake-it');
+    setTimeout(() => this.classList.remove('shake-it'), 500);
+  } else {
+    playNote(getFrequency(note));
+    // L'ingrandimento è già gestito dal CSS :active, 
+    // ma possiamo aggiungere un bagliore extra qui
+    this.style.textShadow = "0 0 25px var(--cyan)";
+    setTimeout(() => this.style.textShadow = "none", 300);
+  }
+};
 
 function getFrequency(note) {
   const notes = { 'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88 };
