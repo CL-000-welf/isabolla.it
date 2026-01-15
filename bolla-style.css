@@ -72,9 +72,9 @@ body {
 .cocorita-outside {
     position: absolute;
     left: -60px; /* Appoggiata a sinistra */
-    top: 50%;
+    top: 10%;
     transform: translateY(-50%);
-    width: 110px;
+    width: 210px;
     z-index: 10;
     filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
     transition: transform 0.3s ease;
