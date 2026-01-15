@@ -1,5 +1,5 @@
 :root {
-    --bg: #070A12; /* Coerente con il sito principale */
+    --bg: #070A12;
     --cyan: #7CF6FF;
     --magenta: #FF4FD8;
     --violet: #9B7CFF;
@@ -12,112 +12,154 @@ body {
     justify-content: center;
     align-items: center;
     background-color: var(--bg);
-    font-family: sans-serif;
+    /* Sfondo radiale per dare profondità alla scena */
+    background: radial-gradient(circle at center, #1a1f2c 0%, var(--bg) 70%);
+    font-family: ui-sans-serif, system-ui, sans-serif;
     overflow: hidden;
 }
 
-/* Contenitore Scena */
 .scene {
-    perspective: 1000px;
+    perspective: 1200px;
 }
 
-/* La Bolla Interattiva */
+.bubble-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: floating 6s ease-in-out infinite;
+}
+
 .bubble {
-    width: 400px;
-    height: 400px;
+    width: 500px;
+    height: 500px;
     border-radius: 50%;
     position: relative;
+    
+    /* Mix di gradienti per l'effetto sapone/vetro */
     background: radial-gradient(circle at 30% 30%, 
-                rgba(255, 255, 255, 0.15), 
-                rgba(124, 246, 255, 0.1) 40%, 
-                rgba(255, 79, 216, 0.1) 70%, 
-                rgba(155, 124, 255, 0.2));
+                rgba(255, 255, 255, 0.3) 0%, 
+                rgba(124, 246, 255, 0.1) 25%, 
+                rgba(255, 79, 216, 0.1) 50%, 
+                rgba(155, 124, 255, 0.2) 100%);
+
+    /* Bordi luminosi iridescenti */
     box-shadow: 
-        inset 0 0 50px rgba(255, 255, 255, 0.2),
-        0 0 30px rgba(124, 246, 255, 0.3),
-        inset -10px -10px 40px rgba(155, 124, 255, 0.3);
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    animation: float 6s ease-in-out infinite;
+        0 0 60px rgba(155, 124, 255, 0.2),
+        inset 0 0 80px rgba(255, 255, 255, 0.1),
+        inset 20px 20px 60px rgba(124, 246, 255, 0.2),
+        inset -20px -20px 60px rgba(255, 79, 216, 0.2);
+    
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Riflesso realistico della bolla */
-.bubble-reflection {
+/* Riflesso a virgola superiore */
+.bubble-highlight {
     position: absolute;
-    top: 15%;
+    top: 10%;
     left: 15%;
-    width: 100px;
-    height: 50px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+    width: 35%;
+    height: 20%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 100%);
     border-radius: 50%;
-    transform: rotate(-45deg);
+    transform: rotate(-35deg);
+    filter: blur(10px);
+    pointer-events: none;
 }
 
-/* Stile comune per gli oggetti interni */
+/* Bagliore cangiante interno */
+.bubble-inner-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 70% 80%, rgba(255, 172, 65, 0.15), transparent 60%);
+    animation: pulseGlow 8s infinite alternate;
+    pointer-events: none;
+}
+
+/* --- OGGETTI INTERATTIVI --- */
 .object {
     position: absolute;
-    font-size: 40px;
+    font-size: 50px;
+    text-decoration: none;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    z-index: 10;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    filter: grayscale(0.5) opacity(0.7);
-    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)) grayscale(0.3);
 }
 
-/* Etichette al passaggio */
+/* Etichette degli Universi */
 .object::after {
     content: attr(data-label);
     position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: -25px;
     font-size: 12px;
-    color: white;
-    opacity: 0;
-    transition: opacity 0.3s;
-    white-space: nowrap;
+    color: var(--cyan);
+    font-weight: 700;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    transform: translateY(5px);
 }
 
-/* Effetto illuminazione al passaggio */
 .object:hover {
-    filter: grayscale(0) opacity(1) drop-shadow(0 0 15px white);
-    transform: scale(1.4);
+    transform: scale(1.6) rotate(10deg);
+    filter: drop-shadow(0 0 30px var(--cyan)) grayscale(0) brightness(1.3);
+    z-index: 20;
 }
 
 .object:hover::after {
     opacity: 1;
+    transform: translateY(0);
 }
 
-/* Posizionamento radiale degli oggetti */
-.obj1 { top: 20%; left: 50%; transform: translateX(-50%); }
-.obj2 { top: 35%; right: 15%; }
-.obj3 { bottom: 35%; right: 15%; }
-.obj4 { bottom: 20%; left: 50%; transform: translateX(-50%); }
-.obj5 { bottom: 35%; left: 15%; }
-.obj6 { top: 35%; left: 15%; }
+/* Posizioni Circolari */
+.obj1 { top: 12%; }
+.obj2 { top: 35%; right: 12%; }
+.obj3 { bottom: 35%; right: 12%; }
+.obj4 { bottom: 12%; }
+.obj5 { bottom: 35%; left: 12%; }
+.obj6 { top: 35%; left: 12%; }
 
-/* Animazione di galleggiamento della bolla */
-@keyframes float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(2deg); }
-}
-
-/* Bagliore interno che ruota lentamente */
-.bubble-glow {
-    position: absolute;
-    inset: 0;
+/* Ombra dinamica */
+.bubble-shadow {
+    width: 250px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.5);
+    filter: blur(20px);
     border-radius: 50%;
-    background: conic-gradient(from 0deg, transparent, var(--cyan), transparent, var(--magenta), transparent);
-    opacity: 0.1;
-    animation: rotateGlow 10s linear infinite;
-    pointer-events: none;
+    margin-top: 50px;
+    animation: shadowScale 6s ease-in-out infinite;
 }
 
-@keyframes rotateGlow {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+/* Animazioni */
+@keyframes floating {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-40px); }
+}
+
+@keyframes shadowScale {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(0.7); opacity: 0.2; }
+}
+
+@keyframes pulseGlow {
+    from { opacity: 0.3; transform: scale(0.95); }
+    to { opacity: 0.6; transform: scale(1.05); }
+}
+
+/* Ottimizzazione Mobile */
+@media (max-width: 600px) {
+    .bubble { width: 320px; height: 320px; }
+    .object { font-size: 35px; }
 }
