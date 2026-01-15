@@ -163,3 +163,21 @@ body {
     .bubble { width: 320px; height: 320px; }
     .object { font-size: 35px; }
 }
+
+/* Gestione dimensioni immagini PNG nella bolla */
+.object img {
+    width: 60px;   /* Regola la larghezza come preferisci */
+    height: auto;  /* Mantiene le proporzioni corrette */
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+/* Effetto al passaggio del mouse sull'immagine */
+.object:hover img {
+    transform: scale(1.1); /* Leggera enfasi extra sull'immagine al passaggio */
+}
+
+/* Rimuovi la dimensione del font che usavamo per le emoji */
+.object {
+    font-size: 0; /* Serve per pulire eventuali spazi bianchi attorno all'immagine */
+}
