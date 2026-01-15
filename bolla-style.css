@@ -12,12 +12,12 @@ body {
     justify-content: center;
     align-items: center;
     background-color: var(--bg);
-    /* Sfondo radiale per dare profondità alla scena */
-    background: radial-gradient(circle at center, #1a1f2c 0%, var(--bg) 70%);
+    background: radial-gradient(circle at center, #1a1f2c 0%, var(--bg) 100%);
     font-family: ui-sans-serif, system-ui, sans-serif;
     overflow: hidden;
 }
 
+/* --- SCENA E CONTENITORE --- */
 .scene {
     perspective: 1200px;
 }
@@ -27,95 +27,105 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    animation: floating 6s ease-in-out infinite;
+    animation: floatingBubble 6s ease-in-out infinite;
 }
 
+/* --- LA BOLLA --- */
 .bubble {
     width: 500px;
     height: 500px;
     border-radius: 50%;
     position: relative;
-    
-    /* Mix di gradienti per l'effetto sapone/vetro */
     background: radial-gradient(circle at 30% 30%, 
-                rgba(255, 255, 255, 0.3) 0%, 
-                rgba(124, 246, 255, 0.1) 25%, 
-                rgba(255, 79, 216, 0.1) 50%, 
-                rgba(155, 124, 255, 0.2) 100%);
-
-    /* Bordi luminosi iridescenti */
+                rgba(255, 255, 255, 0.25) 0%, 
+                rgba(124, 246, 255, 0.1) 30%, 
+                rgba(255, 79, 216, 0.1) 60%, 
+                rgba(155, 124, 255, 0.25) 100%);
     box-shadow: 
         0 0 60px rgba(155, 124, 255, 0.2),
-        inset 0 0 80px rgba(255, 255, 255, 0.1),
+        inset 0 0 80px rgba(255, 255, 255, 0.15),
         inset 20px 20px 60px rgba(124, 246, 255, 0.2),
         inset -20px -20px 60px rgba(255, 79, 216, 0.2);
-    
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Riflesso a virgola superiore */
 .bubble-highlight {
     position: absolute;
     top: 10%;
     left: 15%;
     width: 35%;
     height: 20%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 100%);
+    background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 100%);
     border-radius: 50%;
     transform: rotate(-35deg);
     filter: blur(10px);
     pointer-events: none;
 }
 
-/* Bagliore cangiante interno */
-.bubble-inner-glow {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle at 70% 80%, rgba(255, 172, 65, 0.15), transparent 60%);
-    animation: pulseGlow 8s infinite alternate;
-    pointer-events: none;
-}
-
-/* --- OGGETTI INTERATTIVI --- */
+/* --- OGGETTI PNG (UNIVERSI) --- */
 .object {
     position: absolute;
-    font-size: 50px;
-    text-decoration: none;
-    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-    z-index: 10;
-    cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
-    filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)) grayscale(0.3);
+    text-decoration: none;
+    z-index: 10;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-/* Etichette degli Universi */
+.object img {
+    width: 80px; /* Regola qui la grandezza dei tuoi PNG */
+    height: auto;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4));
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Posizioni e Animazioni differenziate */
+.obj1 { top: 12%; left: 50%; animation: floatCentered 7s infinite; }
+.obj2 { top: 30%; right: 15%; animation: floatStandard 8s infinite 1s; }
+.obj3 { bottom: 30%; right: 15%; animation: floatStandard 6s infinite 0.5s; }
+.obj4 { bottom: 12%; left: 50%; animation: floatCentered 9s infinite 1.5s; }
+.obj5 { bottom: 30%; left: 15%; animation: floatStandard 7.5s infinite 2s; }
+.obj6 { top: 30%; left: 15%; animation: floatStandard 8.5s infinite 0.2s; }
+
+/* --- INTERAZIONE (HOVER) --- */
+.object:hover {
+    z-index: 100;
+    animation-play-state: paused; /* Si ferma quando ci sei sopra */
+}
+
+/* Forza il transform corretto per gli oggetti centrati (1 e 4) */
+.obj1:hover, .obj4:hover {
+    transform: translateX(-50%) scale(1.3) rotate(5deg) !important;
+}
+
+/* Per tutti gli altri */
+.object:not(.obj1):not(.obj4):hover {
+    transform: scale(1.3) rotate(5deg) !important;
+}
+
+.object:hover img {
+    filter: drop-shadow(0 0 20px var(--cyan)) brightness(1.2);
+}
+
+/* Etichette degli universi */
 .object::after {
     content: attr(data-label);
-    position: absolute;
-    bottom: -25px;
-    font-size: 12px;
+    margin-top: 10px;
+    font-size: 11px;
     color: var(--cyan);
-    font-weight: 700;
-    letter-spacing: 2px;
+    font-weight: bold;
     text-transform: uppercase;
+    letter-spacing: 2px;
     opacity: 0;
     transition: opacity 0.3s, transform 0.3s;
     transform: translateY(5px);
-}
-
-.object:hover {
-    transform: scale(1.6) rotate(10deg);
-    filter: drop-shadow(0 0 30px var(--cyan)) grayscale(0) brightness(1.3);
-    z-index: 20;
+    pointer-events: none;
 }
 
 .object:hover::after {
@@ -123,61 +133,43 @@ body {
     transform: translateY(0);
 }
 
-/* Posizioni Circolari */
-.obj1 { top: 12%; }
-.obj2 { top: 35%; right: 12%; }
-.obj3 { bottom: 35%; right: 12%; }
-.obj4 { bottom: 12%; }
-.obj5 { bottom: 35%; left: 12%; }
-.obj6 { top: 35%; left: 12%; }
+/* --- ANIMAZIONI --- */
+@keyframes floatingBubble {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-30px); }
+}
 
-/* Ombra dinamica */
+@keyframes floatStandard {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(8px, -12px) rotate(3deg); }
+    66% { transform: translate(-8px, -6px) rotate(-3deg); }
+}
+
+@keyframes floatCentered {
+    0%, 100% { transform: translate(-50%, 0) rotate(0deg); }
+    33% { transform: translate(-48%, -12px) rotate(3deg); }
+    66% { transform: translate(-52%, -6px) rotate(-3deg); }
+}
+
+/* Ombra a terra */
 .bubble-shadow {
     width: 250px;
     height: 30px;
     background: rgba(0, 0, 0, 0.5);
     filter: blur(20px);
     border-radius: 50%;
-    margin-top: 50px;
+    margin-top: 40px;
     animation: shadowScale 6s ease-in-out infinite;
-}
-
-/* Animazioni */
-@keyframes floating {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-40px); }
 }
 
 @keyframes shadowScale {
     0%, 100% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(0.7); opacity: 0.2; }
+    50% { transform: scale(0.8); opacity: 0.2; }
 }
 
-@keyframes pulseGlow {
-    from { opacity: 0.3; transform: scale(0.95); }
-    to { opacity: 0.6; transform: scale(1.05); }
-}
-
-/* Ottimizzazione Mobile */
+/* Responsività Mobile */
 @media (max-width: 600px) {
     .bubble { width: 320px; height: 320px; }
-    .object { font-size: 35px; }
-}
-
-/* Gestione dimensioni immagini PNG nella bolla */
-.object img {
-    width: 60px;   /* Regola la larghezza come preferisci */
-    height: auto;  /* Mantiene le proporzioni corrette */
-    display: block;
-    transition: transform 0.3s ease;
-}
-
-/* Effetto al passaggio del mouse sull'immagine */
-.object:hover img {
-    transform: scale(1.1); /* Leggera enfasi extra sull'immagine al passaggio */
-}
-
-/* Rimuovi la dimensione del font che usavamo per le emoji */
-.object {
-    font-size: 0; /* Serve per pulire eventuali spazi bianchi attorno all'immagine */
+    .object img { width: 60px; }
+    .obj2, .obj3, .obj5, .obj6 { left: 10%; right: 10%; }
 }
