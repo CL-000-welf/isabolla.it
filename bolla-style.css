@@ -68,20 +68,7 @@ body {
     filter: blur(12px);
 }
 
-/* --- COCORITA APPOGGIATA --- */
-.cocorita-outside {
-    position: absolute;
-    left: -60px; /* Appoggiata a sinistra */
-    top: 10%;
-    transform: translateY(-50%);
-    width: 210px;
-    z-index: 10;
-    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
-    transition: transform 0.3s ease;
-}
 
-.cocorita-outside img { width: 100%; height: auto; }
-.cocorita-outside:hover { transform: translateY(-55%) scale(1.1) rotate(-5deg); }
 
 /* --- ICONE INTERNE E EFFETTO HOVER --- */
 .object {
@@ -158,11 +145,11 @@ body {
 /* Ancoraggio preciso della Cocorita alla sinistra della bolla */
 .cocorita-outside {
     position: absolute;
-    left: 0; /* La tiene sul bordo sinistro del contenitore */
-    top: 50%;
+    left: 20%; /* La tiene sul bordo sinistro del contenitore */
+    top: 10%;
     transform: translate(-50%, -50%); /* La centra verticalmente e la sposta a cavallo del bordo */
     z-index: 20;
-    width: 110px; /* Regola la grandezza della cocorita da qui */
+    width: 210px; /* Regola la grandezza della cocorita da qui */
 }
 
 /* Effetto illuminazione per la Cocorita (Glow) */
@@ -176,3 +163,8 @@ body {
     opacity: 1;
     bottom: -25px; /* Posiziona la scritta sotto l'uccellino */
 }
+
+.cocorita-outside img { width: 200%; height: auto; }
+.cocorita-outside:hover { transform: translateY(-55%) scale(1.1) rotate(-5deg); }
+
+
