@@ -1,8 +1,7 @@
 :root {
     --bg: #070A12;
     --cyan: #7CF6FF;
-    --magenta: #FF4FD8;
-    --border-glow: rgba(124, 246, 255, 0.5);
+    --border-glow: rgba(124, 246, 255, 0.4);
 }
 
 body {
@@ -11,103 +10,89 @@ body {
     overflow: hidden; font-family: sans-serif;
 }
 
-/* Animazione di galleggiamento di tutta la bolla */
+.scene { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+
+/* Contenitore fluttuante globale */
 .bubble-container {
-    position: relative; display: flex; justify-content: center; align-items: center;
+    position: relative; width: 550px; height: 550px;
+    display: flex; justify-content: center; align-items: center;
     animation: globalFloat 8s ease-in-out infinite;
 }
 
-/* --- LA BOLLA REALISTICA --- */
+/* --- LA BOLLA CON MORPHING --- */
 .bubble {
-    width: 500px; height: 500px; position: relative;
+    width: 480px; height: 480px; position: relative;
     animation: morphing 10s ease-in-out infinite;
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 70%);
-    
-    /* Bordo spesso e "pastoso" */
-    border: 10px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 
-        0 0 45px var(--border-glow), 
-        inset 0 0 60px var(--border-glow),
-        inset 30px -30px 100px rgba(155, 124, 255, 0.2);
-    
-    backdrop-filter: blur(6px);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 5; overflow: hidden; /* Mantiene le decorazioni dentro */
-}
-
-/* Riflessi di luce */
-.reflection-main {
-    position: absolute; top: 10%; left: 15%; width: 40%; height: 25%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.4), transparent);
-    border-radius: 60% 40% 70% 30%; filter: blur(15px); pointer-events: none;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1), transparent 70%);
+    border: 8px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 40px var(--border-glow), inset 0 0 60px var(--border-glow);
+    backdrop-filter: blur(5px);
+    z-index: 5; overflow: hidden; border-radius: 50%;
 }
 
 /* --- COCORITA IN ALTO (Capitana) --- */
 .cocorita-top {
-    position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
-    width: 170px; z-index: 20; transition: all 0.4s ease;
+    position: absolute; top: -70px; left: 50%; transform: translateX(-50%);
+    width: 140px; z-index: 20; text-decoration: none;
+    display: flex; flex-direction: column; align-items: center;
 }
-.cocorita-top img { width: 100%; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6)); }
-.cocorita-top:hover img { filter: drop-shadow(0 0 30px var(--cyan)) brightness(1.2); transform: scale(1.1); }
+.cocorita-top img { width: 100%; height: auto; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6)); transition: 0.3s; }
+.cocorita-top:hover img { transform: scale(1.1) rotate(-5deg); filter: drop-shadow(0 0 30px var(--cyan)); }
 
-/* --- SFONDO DECORATIVO (Profondità) --- */
-.bg-deco { position: absolute; opacity: 0.15; filter: blur(3px); pointer-events: none; z-index: 6; }
-.bg-deco img { width: 70px; }
+/* --- OGGETTI DI SFONDO (Profondità - Non cliccabili) --- */
+.bg-deco { position: absolute; opacity: 0.1; filter: blur(5px); pointer-events: none; z-index: 6; }
+.bg-deco img { width: 80px; height: auto; }
 .deco1 { top: 15%; left: 15%; }
 .deco2 { bottom: 20%; right: 15%; }
-.deco3 { top: 45%; right: 10%; }
 
-/* --- OGGETTI CLICCABILI --- */
-.object { position: absolute; z-index: 10; display: flex; flex-direction: column; align-items: center; text-decoration: none; }
-.object img { filter: drop-shadow(0 8px 15px rgba(0,0,0,0.4)); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+/* --- ICONE CLICCABILI (Dimensioni Protette) --- */
+.object { 
+    position: absolute; z-index: 10; display: flex; flex-direction: column; align-items: center; text-decoration: none; 
+}
 
-/* Hover con illuminazione (Glow) */
-.object:hover img { transform: scale(1.2); filter: drop-shadow(0 0 25px var(--cyan)) brightness(1.3); }
+/* Blindiamo le dimensioni massime per evitare la confusione dello screenshot */
+.object img { 
+    width: auto; height: auto;
+    max-width: 100px; max-height: 120px; /* Limite critico */
+    object-fit: contain; 
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4)); 
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+
+/* Differenziazione taglie (XL per Baldassarre, SM per Arte Visiva) */
+.obj-xl img { max-width: 130px; max-height: 150px; }
+.obj-sm img { max-width: 70px; max-height: 80px; }
+
+/* Posizionamento Strategico (Evita sovrapposizioni) */
+.pos-1 { top: 15%; right: 20%; }
+.pos-2 { top: 35%; left: 10%; }
+.pos-3 { bottom: 25%; right: 10%; }
+.pos-4 { bottom: 8%; left: 50%; transform: translateX(-50%); }
+.pos-5 { bottom: 35%; left: 30%; }
+
+.object:hover img { transform: scale(1.15); filter: drop-shadow(0 0 25px var(--cyan)) brightness(1.2); }
 .object:hover { z-index: 100; }
 
-/* Etichette */
 .object::after {
-    content: attr(data-label); color: var(--cyan); font-size: 11px; font-weight: bold;
-    text-transform: uppercase; opacity: 0; transition: 0.3s; margin-top: 10px;
-    text-shadow: 0 0 10px rgba(124, 246, 255, 0.5);
+    content: attr(data-label); color: var(--cyan); font-size: 10px; font-weight: bold;
+    text-transform: uppercase; opacity: 0; transition: 0.3s; margin-top: 5px;
+    text-shadow: 0 0 8px black;
 }
 .object:hover::after { opacity: 1; }
-
-/* Scale Dimensioni */
-.obj-xl img { width: 145px; }
-.obj-lg img { width: 115px; }
-.obj-md img { width: 90px; }
-.obj-md-2 img { width: 100px; }
-.obj-sm img { width: 70px; }
-
-/* Posizionamento Sparso */
-.obj-pos-1 { top: 15%; right: 22%; }
-.obj-pos-2 { top: 35%; left: 18%; }
-.obj-pos-3 { top: 60%; right: 25%; }
-.obj-pos-4 { bottom: 12%; left: 30%; }
-.obj-pos-5 { bottom: 40%; right: 12%; }
 
 /* --- ANIMAZIONI --- */
 @keyframes morphing {
     0%, 100% { border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%; }
-    33% { border-radius: 52% 48% 60% 40% / 45% 55% 45% 55%; }
-    66% { border-radius: 48% 52% 42% 58% / 55% 45% 55% 45%; }
+    33% { border-radius: 45% 55% 48% 52% / 52% 48% 55% 45%; }
+    66% { border-radius: 52% 48% 55% 45% / 45% 55% 48% 52%; }
 }
 
 @keyframes globalFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-35px); }
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(1deg); }
 }
 
 .bubble-shadow {
-    position: absolute; bottom: -100px; width: 320px; height: 35px;
+    position: absolute; bottom: -80px; width: 300px; height: 30px;
     background: rgba(0,0,0,0.5); filter: blur(25px); border-radius: 50%;
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-    .bubble { width: 340px; height: 340px; border-width: 6px; }
-    .cocorita-top { width: 100px; top: -50px; }
-    .object img { max-width: 65px; }
-    .obj-xl img { width: 90px; }
 }
